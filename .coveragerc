@@ -1,0 +1,3 @@
+[run]
+source = marc_digital_storage
+omit = marc_digital_storage/test*
