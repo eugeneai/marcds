@@ -1,0 +1,26 @@
+/* IE hacks */
+
+
+
+/* HOME ------------------------------------------------------------*/
+
+div.holder div.block{
+	width: 390px;
+	float: left;
+	margin: 0px 30px 70px 30px;
+}
+
+
+/* ABOUT ------------------------------------------------------------*/
+
+div.fade-slide img{
+	width: 960px;
+	height: 345px;
+}
+
+
+div.separator{
+	border-bottom: 0px none;
+}
+
+
