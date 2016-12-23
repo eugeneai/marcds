@@ -141,9 +141,13 @@
                         <tr><td>pp</td></tr>
                     </table>
                     <div class="well well-lg"
-                         tal:condition="result=='not found' | nothing">
+                         tal:condition="result.startsfrom('!!!') | nothing">
                         <div class="alert alert-warning" role="alert"
+                             tal:condition="result=='!!!not found'"
                         >Ничего не найдено</div>
+                        <div class="alert alert-warning" role="alert"
+                             tal:condition="result=='!!!wrong query'"
+                        >Неверный или пустой запрос</div>
                     </div>
                 </div>
 				<!--

@@ -21,9 +21,9 @@ tests_require = [
     'pytest-cov',
     ]
 
-setup(name='marc-digital-storage',
+setup(name='marcds',
       version='0.0',
-      description='marc-digital-storage',
+      description='marcds',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
           "Programming Language :: Python",
@@ -44,6 +44,6 @@ setup(name='marc-digital-storage',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = marc_digital_storage:main
+      main = marcds:main
       """,
       )

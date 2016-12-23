@@ -14,7 +14,7 @@ class ViewTests(unittest.TestCase):
         from .views import my_view
         request = testing.DummyRequest()
         info = my_view(request)
-        self.assertEqual(info['project'], 'marc-digital-storage')
+        self.assertEqual(info['project'], 'marcds')
 
 
 class FunctionalTests(unittest.TestCase):
