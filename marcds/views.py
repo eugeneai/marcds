@@ -37,6 +37,7 @@ def my_view(request):
             value = q
             records = searcher.search(q, limit=10)
             # Найти книгу
+            # records=None
             if records:
                 text_parts=[]
                 for rec in records:
