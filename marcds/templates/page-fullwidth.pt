@@ -126,6 +126,8 @@
                                        placeholder="Поиск книг"
                                        aria-describedby="sizing-addon1"
                                        name="q"
+                                       value=""
+                                       tal:attributes="value value | ''"
                                 >
                                 <span class="input-group-btn">
                                     <button type="submit" form="search-form" class="btn btn-success"
@@ -136,12 +138,15 @@
                     </form>
 
                     <!-- Table -->
-                    <table class="table" tal:condition="result!='not found' | nothing">
-                        <tr><th>Pq</th></tr>
-                        <tr><td>pp</td></tr>
-                    </table>
+                    <div class="well well-lg" tal:condition="not result.startswith('!!!') | nothing"
+                    tal:content="structure result">
+                    </div>
+                    <span
+                        tal:condition="nothing"
+                        tal:content="repr(result) | default"
+                    >Нет переменной result!s</span>
                     <div class="well well-lg"
-                         tal:condition="result.startsfrom('!!!') | nothing">
+                         tal:condition="result.startswith('!!!') | nothing">
                         <div class="alert alert-warning" role="alert"
                              tal:condition="result=='!!!not found'"
                         >Ничего не найдено</div>
