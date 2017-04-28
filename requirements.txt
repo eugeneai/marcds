@@ -1,0 +1,2 @@
+pymarc
+python-djvulibre
