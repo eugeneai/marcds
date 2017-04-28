@@ -37,3 +37,6 @@ class TestDJVU:
                 pages -= 1
                 if pages == 0:
                     break
+
+                # ISBN checksum recognition
+                # view-source:http://www.hahnlibrary.net/libraries/isbncalc.html
