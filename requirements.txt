@@ -1,2 +1,4 @@
 pymarc
 python-djvulibre
+pyramid
+pyramid_chameleon
