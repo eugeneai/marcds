@@ -4,6 +4,7 @@ import os
 import sys
 
 import djvu.decode
+import codecs
 
 
 class Context(djvu.decode.Context):
@@ -45,7 +46,9 @@ class Context(djvu.decode.Context):
     def interp(self, sexpr):
         if not sexpr:
             return
-        symb = sexpr[0]
+        symb = str(sexpr[0].value)
+        # print(help(symb))
+
         x1 = sexpr[1]
         y1 = sexpr[2]
         x2 = sexpr[3]
@@ -53,9 +56,11 @@ class Context(djvu.decode.Context):
         args = sexpr[5:]
 
         if symb in ["page", "para", "line"]:
+            yield symb, None
             yield from self.interp_args(symb, args)
         elif symb == "word":
-            yield args + " "
+            a = (args[0].bytes).decode("utf8")
+            yield symb, a
 
 
 def main():

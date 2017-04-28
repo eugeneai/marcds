@@ -24,7 +24,16 @@ class TestDJVU:
     def test_render(self):
         context = djvu.Context()
         print(INFILES[0])
-        for i, page in enumerate(context.process(INFILES[0])):
-            print(page)
-            if i > 10:
-                break
+        pages = 10
+        for i, item in enumerate(context.process(INFILES[0])):
+            symb, val = item
+            if val is not None:
+                print(val, end=" ")
+            elif symb == "page":
+                print("\n" + "=" * 40)
+            else:
+                print()
+            if symb == "page":
+                pages -= 1
+                if pages == 0:
+                    break
