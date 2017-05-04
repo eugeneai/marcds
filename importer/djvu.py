@@ -17,15 +17,23 @@ class Context(djvu.decode.Context):
             os._exit(1)
 
     def process(self, path, assexpr=False):
-        document = self.new_document(djvu.decode.FileURI(path))
-        document.decoding_job.wait()
+        for sexpr in self.pages(path):
+            if assexpr:
+                yield sexpr
+            else:
+                yield from self.interp(sexpr)
+
+    def pages(self, path=None, document=None):
+        if document is None:
+            document = self.document(path)
         for page in document.pages:
             page.get_info()
-            # print_text(page.text.sexpr)
-            if assexpr:
-                yield page.text.sexpr
-            else:
-                yield from self.interp(page.text.sexpr)
+            yield page.text.sexpr
+
+    def document(self, path):
+        document = self.new_document(djvu.decode.FileURI(path))
+        document.decoding_job.wait()
+        return document
 
     def get_text(self, sexpr, level=0):
         if level > 0:
@@ -49,10 +57,10 @@ class Context(djvu.decode.Context):
         symb = str(sexpr[0].value)
         # print(help(symb))
 
-        x1 = sexpr[1]
-        y1 = sexpr[2]
-        x2 = sexpr[3]
-        y2 = sexpr[4]
+        # x1 = sexpr[1]
+        # y1 = sexpr[2]
+        # x2 = sexpr[3]
+        # y2 = sexpr[4]
         args = sexpr[5:]
 
         if symb in ["page", "para", "line"]:
@@ -61,6 +69,53 @@ class Context(djvu.decode.Context):
         elif symb == "word":
             a = (args[0].bytes).decode("utf8")
             yield symb, a
+
+    LEVEL = [("page", "\0x0c"),
+             ("para", "\n\n"),
+             ("line", "\n"),
+             ("word", " ")]
+
+    _LEVEL = {rec[0]: i for i, rec in enumerate(LEVEL)}
+
+    def inttree(self, sexpr, symbols):
+        if not sexpr:
+            return
+        symb = str(sexpr[0].value)
+        # x1 = sexpr[1]
+        # y1 = sexpr[2]
+        # x2 = sexpr[3]
+        # y2 = sexpr[4]
+        args = sexpr[5:]
+        if symb == "word":
+            self.sexprs["word"] = (args[0].bytes).decode("utf8")
+        else:
+            for arg in args:
+                yield from self.inttree(arg, symbols)
+
+        if symb in symbols:
+            yield symb, self.sexprs[symb]
+
+        idx = self._LEVEL[symb]
+        if idx > 0:
+            _, sep = self.LEVEL[idx]
+            parent, _ = self.LEVEL[idx - 1]
+            pt = self.sexprs[parent]
+            if pt == "":
+                self.sexprs[parent] = self.sexprs[symb]
+            else:
+                self.sexprs[parent] += sep + self.sexprs[symb]
+        self.sexprs[symb] = ""
+
+    def by_sexpr(self, path=None, sexprs=None, document=None):
+        if sexprs is None:
+            raise RuntimeError("supply symbols for yielding")
+
+        for page in self.pages(path=path, document=document):
+            self.sexprs = {"page": "",
+                           "para": "",
+                           "line": "",
+                           "word": ""}
+            yield from self.inttree(page, sexprs)
 
 
 def main():
