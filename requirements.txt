@@ -1,5 +1,5 @@
 pymarc
-python-djvulibre
+#python-djvulibre
 pyramid
 pyramid_chameleon
 isbnlib
