@@ -2,20 +2,26 @@
 from math import sqrt
 import matplotlib.pyplot as plt
 import isbnlib
+from nose.plugins.skip import SkipTest
+from nose.tools import nottest
+
 
 def getBooksNumber():
     i = 0
     for l in open('./data/BX-CSV-Dump/BX-Books.csv'):
         i = i + 1
 
-    print (i)
+    print(i)
 
 # Загрузка данных (пример для movielen)
+
+
 def load_data(path='./data/BX-CSV-Dump/BX-Book-Ratings.csv'):
     # загружаем предпочтения
     prefs = {}
     for line in open(path):
-        if line == '"User-ID";"ISBN";"Book-Rating"\n' : continue
+        if line == '"User-ID";"ISBN";"Book-Rating"\n':
+            continue
         line = line.replace("\"", "")
         (user, isbn, rating) = line.split(";")
         prefs.setdefault(user, {})
@@ -23,6 +29,8 @@ def load_data(path='./data/BX-CSV-Dump/BX-Book-Ratings.csv'):
     return prefs
 
 # Визуализация матрицы R
+
+
 def visualize_R(prefs):
     # из prefs формируем два массива (по x и по y)
     x = []
@@ -50,7 +58,8 @@ def sim_distance_1(prefs, person1, person2):
             si[item] = 1
 
     # Если нет ни одной общей оценки, вернуть 0
-    if len(si) == 0: return 0
+    if len(si) == 0:
+        return 0
 
     # сложить квадраты разностей
     sum_of_squares = sum([pow(prefs[person1][item] - prefs[person2][item], 2)
@@ -73,7 +82,8 @@ def sim_distance_2(prefs, person1, person2):
         if item in prefs[person2]:
             si[item] = 1
     # Если нет ни одной общей оценки, вернуть 0
-    if len(si) == 0: return 0
+    if len(si) == 0:
+        return 0
     # объединение
     num_of_union = float(len(prefs[person1]) + len(prefs[person2]))
     return len(si) / num_of_union
@@ -102,9 +112,12 @@ def topMatches(prefs_learn_data, person, object_id, k=5, similarity=sim_distance
 # Получить неизвестную оценку объекта для пользователя
 def get_rating(prefs_learn_data, person, object_id, similarity=sim_distance_1):
     # Получаем наиболее похожих пользователей
-    scores = topMatches(prefs_learn_data, person, object_id, similarity=similarity)
-    # Если для пользователя не нашлось похожих пользователей (белая ворона), то вернуть 0
-    if len(scores) == 0: return 0
+    scores = topMatches(prefs_learn_data, person,
+                        object_id, similarity=similarity)
+    # Если для пользователя не нашлось похожих пользователей (белая ворона),
+    # то вернуть 0
+    if len(scores) == 0:
+        return 0
     # Вычисляем сумму произведений оценок на меру близости
     sum_sim_score = sum(score[0] * score[1] for score in scores)
     # Вычисляем сумму всех мер близости
@@ -137,6 +150,7 @@ def get_learn_data(prefs):
     return result
 
 
+@nottest
 def get_test_data(prefs):
     # 20 %
     start = int(len(prefs) * 0.8)
@@ -152,8 +166,12 @@ def get_test_data(prefs):
     return result
 
 # Тестирование разработанной системы на тестовой выборке
+
+
+@nottest
 def test_data():
-    # загружаем обучающую выборку и дальше ее будем использовать для прогноза оценки для тестовой выборки
+    # загружаем обучающую выборку и дальше ее будем использовать для прогноза
+    # оценки для тестовой выборки
     data = load_data(path='./data/BX-CSV-Dump/BX-Book-Ratings.csv')
     prefs_learn_data = get_learn_data(data)
     test_prefs = get_test_data(data)
@@ -169,21 +187,25 @@ def test_data():
     for user in test_prefs:
         for book in test_prefs[user]:
             rating_real.append(test_prefs[user][book])
-            rating_predict.append(get_rating(prefs_learn_data, str(user), str(book), similarity=sim_distance_1))
+            rating_predict.append(get_rating(prefs_learn_data, str(
+                user), str(book), similarity=sim_distance_1))
     # вычисляем ошибку RMSE
-    print (rating_predict)
-    print (rating_real)
-    print (calculate_error(rating_real, rating_predict))
+    print(rating_predict)
+    print(rating_real)
+    print(calculate_error(rating_real, rating_predict))
 
 
+@SkipTest
 class TestISBNLib(object):
-    
+
     def test_isbnlib(self):
         test_data()
+
 
 def main():
     t = TestISBNLib()
     t.test_isbnlib()
+
 
 if __name__ == '__main__':
     main()

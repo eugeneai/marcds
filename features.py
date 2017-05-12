@@ -16,7 +16,7 @@ class FGen(object):
         re.compile(r"(978-)?\d-\d{3}-\d{5}-\d"): "check_ISBN",
         re.compile(r"\d{2,2}.\d{3,3}.\d{2,2}-"): "BBK",
         re.compile(r"\d{3,3}(\.\d+)?"): "UDC",
-        re.compile(r"[А-Я]\d{2,2}"): "ORDER",
+        re.compile(r"[А-Я]-?\d{2,2}"): "ORDER",
     }
 
     def metadata(self, sexprs, elems=None):
@@ -55,6 +55,8 @@ class FGen(object):
 
             if elems is not None:
                 elems -= 1
+
+#    def
 
     def check_ISBN(self, s):
         s = s.replace("-", "")
