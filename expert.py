@@ -11,7 +11,6 @@ class DataPageRecognizer(KnowledgeEngine):
     @DefFacts()
     def __init__fact_db__(self):
         gen = FKnowGen(self.book)
-
         yield from gen.metadata(set(["page"]), elems=self.pages)
 
     @Rule(ORDER(page='po' << W()),
@@ -33,3 +32,28 @@ class DataPageRecognizer(KnowledgeEngine):
     def rule_page(self, pb, pi, isbn, f1):
         self.declare(ISSUEDATAPAGE(isbn=isbn, page=pb))
         self.retract(f1)
+
+    @Rule(ISSUEDATAPAGE(page='pi' << W()),
+          PAGECOUNT(match='m' << W(), page='pp' << W(), line='pl' << W()),
+          TEST(lambda pi, pp: pi == pp),
+          EMPTYLINE(page='ep1' << W(), line='l1' << W()),
+          TEST(lambda pi, ep1, pl, l1: pi == ep1 and (
+              pl - l1) <= 4 and (pl - l1) > 0),
+          EMPTYLINE(page='ep2' << W(), line='l2' << W()),
+          TEST(lambda pi, ep2, pl, l2: pi == ep2 and (
+              l2 - pl) <= 2 and (l2 - pl) > 0),
+          )
+    def determ(self, l1, l2, pp, **kwargs):
+        l1 += 1
+        l2 -= 1
+        self.declare(ISSUEDATALINES(begin=l1, end=l2, page=pp))
+
+
+class ClassName(object):
+    """Documentation for ClassName
+
+    """
+
+    def __init__(self, args):
+        super(ClassName, self).__init__()
+        self.args = args

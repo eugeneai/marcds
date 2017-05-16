@@ -9,10 +9,12 @@ class TestFeatureExtractor:
         self.f = FGen(INFILES[0])
 
     def test_simple(self):
+        facts = False
         for feature in self.f.metadata(set(["page"]), elems=20):
-            break
-        else:
-            assert False, "there are no facts."
+            print(feature)
+            facts = True
+
+        assert facts, "no facts"
 
 
 class TestDataPageRecognizer:

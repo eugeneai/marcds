@@ -18,7 +18,9 @@ class FGen(object):
         re.compile(r"(978-)?\d-\d{3}-\d{5}-\d"): "check_ISBN",
         re.compile(r"\d{2,2}.\d{3,3}.\d{2,2}-"): "BBK",
         re.compile(r"\d{3,3}(\.\d+)?"): "UDC",
+        re.compile(r"(\d{2,4})\s+[cсCС]\."): ("PAGECOUNT", 1),
         re.compile(r"[А-Я]-?\d{2,2}"): "ORDER",
+        re.compile(r"^\s*$"): "EMPTYLINE",
     }
 
     def metadata(self, sexprs, elems=None):
@@ -30,10 +32,15 @@ class FGen(object):
                 return
 
             for i, line in enumerate(lines):
+                _l = line.strip()
+                if _l:
+                    yield self.wrap("LINE", line, line, i, no)
                 for _re, cons in self.REGS.items():
                     for mo in _re.finditer(line):
-                        match = mo.group(0)
-
+                        group_no = 0
+                        if isinstance(cons, tuple):
+                            cons, group_no = cons
+                        match = mo.group(group_no)
                         if hasattr(self, cons):
                             orig_cons = cons.replace("check_", "")
                             cons = getattr(self, cons)
@@ -90,10 +97,26 @@ class ORDER(Fact):
     pass
 
 
+class PAGECOUNT(Fact):
+    pass
+
+
+class LINE(Fact):
+    pass
+
+
+class EMPTYLINE(Fact):
+    pass
+
+
 class ISSUEDATAPAGE(pyknow.Fact):
     @classmethod
     def _make(cls, isbn, page):
         return cls(isbn=isbn, page=page)
+
+
+class ISSUEDATALINES(pyknow.Fact):
+    pass
 
 
 class FKnowGen(FGen):

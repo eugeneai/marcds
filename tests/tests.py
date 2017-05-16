@@ -30,12 +30,11 @@ class TestDJVU:
 
                 # ISBN checksum recognition
                 # view-source:http://www.hahnlibrary.net/libraries/isbncalc.html
-    @nottest
+    #@nottest
     def test_inttree(self):
         elems = 4
         for elem in self.context.by_sexpr(self.path, set(["page"])):
             _, text = elem
-            print(text)
             elems -= 1
             if elems == 0:
                 break
