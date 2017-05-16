@@ -3,3 +3,4 @@ pymarc
 pyramid
 pyramid_chameleon
 isbnlib
+durable_rules

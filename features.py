@@ -1,6 +1,8 @@
 from importer import djvu
 import re
 import isbnlib
+from collections import namedtuple
+import pyknow
 
 
 class FGen(object):
@@ -37,18 +39,18 @@ class FGen(object):
                             cons = getattr(self, cons)
 
                         if isinstance(cons, str):
-                            yield (cons, match, line, i, no)
+                            yield self.wrap(cons, match, line, i, no)
                         else:
                             # FIXME: Suppose cons to be callable object
                             answer = cons(match)
                             if isinstance(answer, bool):
                                 if answer:
-                                    yield (cons, match, line, i, no)
+                                    yield self.wrap(cons, match, line, i, no)
                                 else:
                                     continue
                             if answer is None:
                                 continue
-                            yield (orig_cons, answer, line, i, no)
+                            yield self.wrap(orig_cons, answer, line, i, no)
 
                     else:
                         continue
@@ -56,10 +58,49 @@ class FGen(object):
             if elems is not None:
                 elems -= 1
 
-#    def
+    def wrap(self, *args):
+        return args
 
     def check_ISBN(self, s):
         s = s.replace("-", "")
         if isbnlib.notisbn(s):
             return False
         return s
+
+
+class Fact(pyknow.Fact):
+    @classmethod
+    def _make(cls, match, string, line, page):
+        return cls(match=match, string=string, line=line, page=page)
+
+
+class ISBN(Fact):
+    pass
+
+
+class UDC(Fact):
+    pass
+
+
+class BBK(Fact):
+    pass
+
+
+class ORDER(Fact):
+    pass
+
+
+class DATAPAGE(pyknow.Fact):
+    @classmethod
+    def _make(cls, isbn, page):
+        return cls(isbn=isbn, page=page)
+
+
+class FKnowGen(FGen):
+    """Documentation for FKnowGen
+
+    """
+
+    def wrap(self, name, *args):
+        cls = globals()[name]
+        return cls._make(*args)
