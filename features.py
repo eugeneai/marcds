@@ -90,7 +90,7 @@ class ORDER(Fact):
     pass
 
 
-class DATAPAGE(pyknow.Fact):
+class ISSUEDATAPAGE(pyknow.Fact):
     @classmethod
     def _make(cls, isbn, page):
         return cls(isbn=isbn, page=page)

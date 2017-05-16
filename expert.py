@@ -23,7 +23,7 @@ class DataPageRecognizer(KnowledgeEngine):
           TEST(lambda pu, pi: pi == pu),
           salience=100)
     def rule_page(self, po, pb, pi, isbn, pu, f1):
-        self.declare(DATAPAGE(isbn=isbn, page=po))
+        self.declare(ISSUEDATAPAGE(isbn=isbn, page=po))
         self.retract(f1)
 
     @Rule(BBK(page='pb' << W()),
@@ -31,5 +31,5 @@ class DataPageRecognizer(KnowledgeEngine):
           TEST(lambda pb, pi: pb == pi),
           salience=-100)
     def rule_page(self, pb, pi, isbn, f1):
-        self.declare(DATAPAGE(isbn=isbn, page=pb))
+        self.declare(ISSUEDATAPAGE(isbn=isbn, page=pb))
         self.retract(f1)
