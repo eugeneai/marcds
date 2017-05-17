@@ -23,6 +23,7 @@ class RobotCrossStreet(KnowledgeEngine):
         print("Be cautious because light is", light["color"])
 
 
+@nottest
 def test_roborules():
     engine = RobotCrossStreet()
     engine.reset()

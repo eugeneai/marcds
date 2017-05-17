@@ -1,8 +1,10 @@
 from utils import INFILES, INDIR
 from features import FGen
 from expert import DataPageRecognizer
+from nose.plugins.skip import SkipTest
 
 
+@SkipTest
 class TestFeatureExtractor:
 
     def setUp(self):
@@ -25,4 +27,5 @@ class TestDataPageRecognizer:
     def test_recognition(self):
         self.r.reset()
         self.r.run()
-        print(self.r.facts)
+        assert self.r.issue_date is not None
+        # print(self.r.facts)

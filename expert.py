@@ -7,6 +7,7 @@ class DataPageRecognizer(KnowledgeEngine):
         super(DataPageRecognizer, self).__init__()
         self.book = book
         self.pages = pages
+        self.issue_date = None
 
     @DefFacts()
     def __init__fact_db__(self):
@@ -44,9 +45,12 @@ class DataPageRecognizer(KnowledgeEngine):
               l2 - pl) <= 2 and (l2 - pl) > 0),
           )
     def determ(self, l1, l2, pp, **kwargs):
+
         l1 += 1
         l2 -= 1
-        self.declare(ISSUEDATALINES(begin=l1, end=l2, page=pp))
+        self.issue_date = ISSUEDATALINES(begin=l1, end=l2, page=pp)
+        self.declare(self.issue_date)
+        self.halt()
 
 
 class ClassName(object):
