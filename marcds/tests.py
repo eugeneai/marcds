@@ -1,9 +1,11 @@
 import unittest
 
 from pyramid import testing
+from nose.plugins.skip import SkipTest
 
 
-class ViewTests(unittest.TestCase):
+class TestsView(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -17,7 +19,9 @@ class ViewTests(unittest.TestCase):
         # self.assertEqual(info['project'], 'marcds')
 
 
+@SkipTest
 class FunctionalTests(unittest.TestCase):
+
     def setUp(self):
         from marcds import main
         app = main({})

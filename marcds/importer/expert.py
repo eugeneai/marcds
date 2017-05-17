@@ -4,15 +4,17 @@ from pyknow import *
 
 class DataPageRecognizer(KnowledgeEngine):
 
-    def __init__(self, book, pages=5):
+    def __init__(self, filename=None, context=None, document=None, pages=5):
         super(DataPageRecognizer, self).__init__()
-        self.book = book
+        self.book = filename
+        self.context = context
+        self.document = document
         self.pages = pages
-        self.issue_date = None
+        self.issue_data = None
 
     @DefFacts()
     def __init__fact_db__(self):
-        gen = FKnowGen(self.book)
+        gen = FKnowGen(self.book, context=self.context, document=self.document)
         yield from gen.metadata(set(["page"]), elems=self.pages)
 
     @Rule(ORDER(page='po' << W()),
@@ -46,11 +48,10 @@ class DataPageRecognizer(KnowledgeEngine):
               l2 - pl) <= 2 and (l2 - pl) > 0),
           )
     def determ(self, l1, l2, pp, **kwargs):
-
         l1 += 1
         l2 -= 1
-        self.issue_date = ISSUEDATALINES(begin=l1, end=l2, page=pp)
-        self.declare(self.issue_date)
+        self.issue_data = ISSUEDATALINES(start=l1, end=l2, page=pp)
+        self.declare(self.issue_data)
         self.halt()
 
 

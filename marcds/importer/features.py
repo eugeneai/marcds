@@ -9,10 +9,14 @@ class FGen(object):
     """Class generating features list.
     """
 
-    def __init__(self, path):
+    def __init__(self, path=None, context=None, document=None):
         super(FGen, self).__init__()
-        self.context = djvu.Context()
-        self.document = self.context.document(path)
+        if context is not None and document is not None:
+            self.context = context
+            self.document = document
+        else:
+            self.context = djvu.Context()
+            self.document = self.context.document(path)
 
     REGS = {
         re.compile(r"(978-)?\d-\d{3}-\d{5}-\d"): "check_ISBN",

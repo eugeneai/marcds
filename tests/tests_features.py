@@ -2,6 +2,7 @@ from utils import INFILES, INDIR
 from marcds.importer.features import FGen
 from marcds.importer.expert import DataPageRecognizer
 from nose.plugins.skip import SkipTest
+from marcds.importer.issuerecog import DJVUtoMARC
 
 
 @SkipTest
@@ -19,6 +20,7 @@ class TestFeatureExtractor:
         assert facts, "no facts"
 
 
+@SkipTest
 class TestDataPageRecognizer:
 
     def setUp(self):
@@ -29,3 +31,13 @@ class TestDataPageRecognizer:
         self.r.run()
         assert self.r.issue_date is not None
         # print(self.r.facts)
+
+
+class TestDJVUtoMARC(object):
+    """Documentation for TestDJVUtoMARC
+
+    """
+
+    def test_basic(self):
+        dj = DJVUtoMARC(INFILES[0])
+        assert dj.issue_data()

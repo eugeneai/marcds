@@ -23,10 +23,16 @@ class Context(djvu.decode.Context):
             else:
                 yield from self.interp(sexpr)
 
-    def pages(self, path=None, document=None):
+    def pages(self, path=None, document=None, start=None, end=None):
         if document is None:
             document = self.document(path)
-        for page in document.pages:
+        pages = document.pages
+        if end is None:
+            end = len(pages)
+        if start is None:
+            start = 0
+        print(start, end)
+        for page in list(document.pages)[start:end]:
             page.get_info()
             yield page.text.sexpr
 
@@ -77,14 +83,15 @@ class Context(djvu.decode.Context):
 
     _LEVEL = {rec[0]: i for i, rec in enumerate(LEVEL)}
 
-    def inttree(self, sexpr, symbols):
+    def inttree(self, sexpr, symbols, last=False):
         if not sexpr:
+            if last:
+                for symb in symbols:
+                    val = self.sexprs[symb]
+                    if val:
+                        yield symb, val
             return
         symb = str(sexpr[0].value)
-        # x1 = sexpr[1]
-        # y1 = sexpr[2]
-        # x2 = sexpr[3]
-        # y2 = sexpr[4]
         args = sexpr[5:]
         if symb == "word":
             self.sexprs["word"] = (args[0].bytes).decode("utf8")
@@ -92,7 +99,7 @@ class Context(djvu.decode.Context):
             for arg in args:
                 yield from self.inttree(arg, symbols)
 
-        if symb in symbols:
+        if symb in symbols:  # This is the previous page
             yield symb, self.sexprs[symb]
 
         idx = self._LEVEL[symb]
@@ -106,16 +113,16 @@ class Context(djvu.decode.Context):
                 self.sexprs[parent] += sep + self.sexprs[symb]
         self.sexprs[symb] = ""
 
-    def by_sexpr(self, path=None, sexprs=None, document=None):
+    def by_sexpr(self, path=None, sexprs=None, document=None, start=None, end=None):
         if sexprs is None:
             raise RuntimeError("supply symbols for yielding")
-
-        for page in self.pages(path=path, document=document):
+        for page in self.pages(path=path, document=document, start=start, end=end):
             self.sexprs = {"page": "",
                            "para": "",
                            "line": "",
                            "word": ""}
             yield from self.inttree(page, sexprs)
+        yield from self.inttree(None, sexprs, last=True)
 
 
 def main():
