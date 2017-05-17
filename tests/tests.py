@@ -2,7 +2,7 @@ from nose.plugins.skip import SkipTest
 from nose.tools import nottest
 # from .test_fos_apps import OUTDIR, INDIR
 import os.path
-from importer import djvu
+from marcds.importer import djvu
 from utils import INFILES, INDIR
 
 

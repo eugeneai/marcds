@@ -1,4 +1,4 @@
-from importer import djvu
+from marcds.importer import djvu
 import re
 import isbnlib
 from collections import namedtuple
@@ -76,6 +76,7 @@ class FGen(object):
 
 
 class Fact(pyknow.Fact):
+
     @classmethod
     def _make(cls, match, string, line, page):
         return cls(match=match, string=string, line=line, page=page)
@@ -110,6 +111,7 @@ class EMPTYLINE(Fact):
 
 
 class ISSUEDATAPAGE(pyknow.Fact):
+
     @classmethod
     def _make(cls, isbn, page):
         return cls(isbn=isbn, page=page)

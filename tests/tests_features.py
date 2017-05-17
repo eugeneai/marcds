@@ -1,6 +1,6 @@
 from utils import INFILES, INDIR
-from features import FGen
-from expert import DataPageRecognizer
+from marcds.importer.features import FGen
+from marcds.importer.expert import DataPageRecognizer
 from nose.plugins.skip import SkipTest
 
 

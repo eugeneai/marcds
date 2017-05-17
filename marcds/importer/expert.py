@@ -1,8 +1,9 @@
-from features import *
+from marcds.importer.features import *
 from pyknow import *
 
 
 class DataPageRecognizer(KnowledgeEngine):
+
     def __init__(self, book, pages=5):
         super(DataPageRecognizer, self).__init__()
         self.book = book
