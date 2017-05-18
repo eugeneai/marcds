@@ -33,11 +33,32 @@ class TestDataPageRecognizer:
         # print(self.r.facts)
 
 
+@SkipTest
 class TestDJVUtoMARC(object):
     """Documentation for TestDJVUtoMARC
-
     """
 
     def test_basic(self):
         dj = DJVUtoMARC(INFILES[0])
         assert dj.issue_data()
+
+
+class TestIssueDataRecognizer(object):
+
+    def test_basic(self):
+        from marcds.importer.exp_issue import IssueDataRecognizer
+        dr = IssueDataRecognizer("Иванов И.И., Петрова А. В., Зеленая И.")
+
+        dr.prepare()
+        dr.run()
+        print(dr.facts)
+
+    def test_father(self):
+        from marcds.importer.exp_issue import IssueDataRecognizer
+        dr = IssueDataRecognizer(
+            "Черкашин А.К. Полисистемное моделированиею -"
+            " Новосибирск: Наука, 2005. - 280 с.")
+
+        dr.prepare()
+        dr.run()
+        print(dr.facts)

@@ -1,5 +1,6 @@
 from marcds.importer.features import *
 from pyknow import *
+import re
 
 
 class DataPageRecognizer(KnowledgeEngine):
@@ -53,13 +54,3 @@ class DataPageRecognizer(KnowledgeEngine):
         self.issue_data = ISSUEDATALINES(start=l1, end=l2, page=pp)
         self.declare(self.issue_data)
         self.halt()
-
-
-class ClassName(object):
-    """Documentation for ClassName
-
-    """
-
-    def __init__(self, args):
-        super(ClassName, self).__init__()
-        self.args = args
