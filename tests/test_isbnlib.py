@@ -2,6 +2,7 @@
 from math import sqrt
 import matplotlib.pyplot as plt
 import isbnlib
+from isbnlib import *
 from nose.plugins.skip import SkipTest
 from nose.tools import nottest
 
@@ -202,9 +203,22 @@ class TestISBNLib(object):
         test_data()
 
 
+def test_isbnlib_2(q):
+    import sys
+
+    query = q
+    isbn = isbn_from_words(query)
+
+    print("The ISBN of the most `spoken-about` book with this title is %s" % isbn)
+    print("")
+    print("... and the book is:")
+    print("")
+    print((meta(isbn)))
+
+
 def main():
     t = TestISBNLib()
-    t.test_isbnlib()
+    t.test_isbnlib_2()
 
 
 if __name__ == '__main__':

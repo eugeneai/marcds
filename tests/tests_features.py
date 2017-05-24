@@ -62,3 +62,13 @@ class TestIssueDataRecognizer(object):
         dr.prepare()
         dr.run()
         print(dr.facts)
+
+    def test_yablonsky(self):
+        from marcds.importer.exp_issue import IssueDataRecognizer
+        dr = IssueDataRecognizer(
+            "Введение в дискретную математику. Яблонский С. В. - М.: Нау-"
+            "ка. Главная редакция физико-математической литературы, 1979.")
+
+        dr.prepare()
+        dr.run()
+        print(dr.facts)
