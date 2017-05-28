@@ -1,6 +1,8 @@
 pymarc
-python-djvulibre
 pyramid
 pyramid_chameleon
 isbnlib
 pyramid-sacrud
+pyknow
+python-djvulibre
+# elasticsearch_dsl

@@ -2,30 +2,20 @@ from nose.plugins.skip import SkipTest
 from nose.tools import nottest
 # from .test_fos_apps import OUTDIR, INDIR
 import os.path
-from importer import djvu
-from glob import glob
-
-INDIR = __file__
-
-INDIR = os.path.join(os.path.split(INDIR)[0], "../../ISDCT")
-INDIR = os.path.abspath(INDIR)
-
-INFILES = glob(os.path.join(INDIR, "*.djvu"))
-INFILES.sort()
-# print(INFILES)
+from marcds.importer import djvu
+from utils import INFILES, INDIR
 
 
 class TestDJVU:
 
     def setUp(self):
-        pass
+        self.context = djvu.Context()
+        self.path = INFILES[0]
 
-#    @nottest
+    @nottest
     def test_render(self):
-        context = djvu.Context()
-        print(INFILES[0])
-        pages = 10
-        for i, item in enumerate(context.process(INFILES[0])):
+        pages = 2
+        for i, item in enumerate(self.context.process(self.path)):
             symb, val = item
             if val is not None:
                 print(val, end=" ")
@@ -40,3 +30,11 @@ class TestDJVU:
 
                 # ISBN checksum recognition
                 # view-source:http://www.hahnlibrary.net/libraries/isbncalc.html
+    #@nottest
+    def test_inttree(self):
+        elems = 4
+        for elem in self.context.by_sexpr(self.path, set(["page"])):
+            _, text = elem
+            elems -= 1
+            if elems == 0:
+                break
