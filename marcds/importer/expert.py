@@ -12,6 +12,7 @@ class DataPageRecognizer(KnowledgeEngine):
         self.document = document
         self.pages = pages
         self.issue_data = None
+        self.isbn = None
 
     @DefFacts()
     def __init__fact_db__(self):
@@ -27,6 +28,7 @@ class DataPageRecognizer(KnowledgeEngine):
           TEST(lambda pu, pi: pi == pu),
           salience=100)
     def rule_page(self, po, pb, pi, isbn, pu, f1):
+        self.isbn = isbn
         self.declare(ISSUEDATAPAGE(isbn=isbn, page=po))
         self.retract(f1)
 

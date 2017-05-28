@@ -27,6 +27,7 @@ class DJVUtoMARC(object):
                 raise NoIssueDataException()
 
         idata = r.issue_data
+        self.isbn = r.isbn
         page = idata["page"]
 
         for p in self.context.by_sexpr(sexprs=["page"],
@@ -39,6 +40,8 @@ class DJVUtoMARC(object):
             start, end = idata["start"], idata["end"]
             #print(p[1], start, end)
             lines = p[1].split("\n")[start:end + 1]
-            print("\n".join(lines))
+            # print("\n".join(lines))
+            self.lines = lines
+            self.issue_data
 
         return True
