@@ -37,6 +37,7 @@ class DataPageRecognizer(KnowledgeEngine):
           TEST(lambda pb, pi: pb == pi),
           salience=-100)
     def rule_page(self, pb, pi, isbn, f1):
+        self.isbn = isbn
         self.declare(ISSUEDATAPAGE(isbn=isbn, page=pb))
         self.retract(f1)
 
