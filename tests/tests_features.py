@@ -33,7 +33,7 @@ class TestDataPageRecognizer:
         # print(self.r.facts)
 
 
-@SkipTest
+#@SkipTest
 class TestDJVUtoMARC(object):
     """Documentation for TestDJVUtoMARC
     """
@@ -41,7 +41,10 @@ class TestDJVUtoMARC(object):
     def test_basic(self):
         dj = DJVUtoMARC(INFILES[0])
         assert dj.issue_data()
+        print("ISBN:", dj.isbn)
         assert dj.isbn
+        rc = dj.query_with_isbn(services=("wcat", "goob", "openl"))
+        print("Queries:", rc)
 
 
 class TestIssueDataRecognizer(object):

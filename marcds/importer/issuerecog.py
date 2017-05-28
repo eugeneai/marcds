@@ -45,3 +45,21 @@ class DJVUtoMARC(object):
             self.issue_data
 
         return True
+
+    def query_with_isbn(self, services=None, format="json"):
+        from isbnlib import meta
+        from isbnlib.registry import bibformatters
+        if self.isbn is None:
+            raise ValueError("no isbn recognized")
+
+        if services is None:
+            services = ("default",)
+
+        rc = {}
+        formatter = bibformatters[format]
+        for serv in services:
+            data = meta(self.isbn)
+            if data is not None:
+                rc[serv] = formatter(data)
+
+        return rc
