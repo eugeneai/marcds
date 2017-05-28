@@ -41,6 +41,7 @@ class TestDJVUtoMARC(object):
     def test_basic(self):
         dj = DJVUtoMARC(INFILES[0])
         assert dj.issue_data()
+        assert dj.isbn
 
 
 class TestIssueDataRecognizer(object):
