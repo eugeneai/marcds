@@ -3,3 +3,4 @@ python-djvulibre
 pyramid
 pyramid_chameleon
 isbnlib
+pyramid-sacrud

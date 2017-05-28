@@ -5,6 +5,7 @@ import sys
 
 import djvu.decode
 import codecs
+import isbnlib
 
 
 class Context(djvu.decode.Context):
