@@ -90,7 +90,10 @@ class Context(djvu.decode.Context):
                     if val:
                         yield symb, val
             return
-        symb = str(sexpr[0].value)
+        try:
+            symb = str(sexpr[0].value)
+        except TypeError:  # FIXME: Strange behavior of sexpr
+            return
         args = sexpr[5:]
         if symb == "word":
             self.sexprs["word"] = (args[0].bytes).decode("utf8")
@@ -101,7 +104,10 @@ class Context(djvu.decode.Context):
         if symb in symbols:  # This is the previous page
             yield symb, self.sexprs[symb]
 
-        idx = self._LEVEL[symb]
+        try:
+            idx = self._LEVEL[symb]
+        except KeyError:
+            return
         if idx > 0:
             _, sep = self.LEVEL[idx]
             parent, _ = self.LEVEL[idx - 1]

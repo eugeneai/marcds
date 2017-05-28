@@ -45,13 +45,15 @@ class FGen(object):
                         if isinstance(cons, tuple):
                             cons, group_no = cons
                         match = mo.group(group_no)
-                        if hasattr(self, cons):
-                            orig_cons = cons.replace("check_", "")
-                            cons = getattr(self, cons)
 
                         if isinstance(cons, str):
-                            yield self.wrap(cons, match, line, i, no)
-                        else:
+                            if hasattr(self, cons):
+                                orig_cons = cons.replace("check_", "")
+                                cons = getattr(self, cons)
+                            else:
+                                yield self.wrap(cons, match, line, i, no)
+                                continue
+                        if 1:
                             # FIXME: Suppose cons to be callable object
                             answer = cons(match)
                             if isinstance(answer, bool):
@@ -62,9 +64,6 @@ class FGen(object):
                             if answer is None:
                                 continue
                             yield self.wrap(orig_cons, answer, line, i, no)
-
-                    else:
-                        continue
 
             if elems is not None:
                 elems -= 1
