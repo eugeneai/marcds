@@ -4,7 +4,6 @@ import os
 import sys
 
 import djvu.decode
-import codecs
 
 
 class Context(djvu.decode.Context):
