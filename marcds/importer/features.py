@@ -28,8 +28,9 @@ class FGen(object):
     }
 
     def metadata(self, sexprs, elems=None):
-        for no, elem in enumerate(self.context.by_sexpr(sexprs=["page"],
-                                                        document=self.document)):
+        for no, elem in enumerate(
+                self.context.by_sexpr(sexprs=["page"],
+                                      document=self.document)):
             symb, text = elem
             lines = text.split("\n")
             if elems is not None and elems == 0:
